@@ -1,27 +1,22 @@
 {
-"manifest version": 3,
+"manifest_version": 3,
 "name": "Chrome Texter",
 "version": "1.0",
+
 "action": {
     "default_icon": {
-
+        "30": "images/icons8-font-size-30.png"
     },
     "default_popup": "popup.html"
 },
-"defaultl locale": "en",
+
 "description": "Converts text formatting in various ways",
-"icons": {},
 
 "content_scripts": [
     {
-        "js": [
-            "script.js"
-        ],
-        "matches": [
-            "<all_urls>"
-        ]
+        "js": ["script.js"],
+        "html": ["popup.html"],
+        "matches": ["<all_urls>"]
     }
-],
-
-"host permissions": []
+]
 }

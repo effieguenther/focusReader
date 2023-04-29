@@ -1,11 +1,14 @@
-console.log("script running");
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("popup opened");
+    const HALF_BOLD_SWITCH = document.querySelector("#halfBold");
 
-const halfBoldSwitch = document.querySelector("#halfBold");
-
-halfBoldSwitch.addEventListener('click', () => {
-    if (halfBoldSwitch.checked) {
-        console.log("box checked");
-    } else {
-        console.log("box unchecked");
-    }
+    HALF_BOLD_SWITCH.addEventListener('click', () => {
+        if (HALF_BOLD_SWITCH.checked) {
+            console.log("box checked")
+        } else {
+            console.log("box unchecked");
+        }
+    })
 })
+
+

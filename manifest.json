@@ -2,6 +2,7 @@
 "manifest_version": 3,
 "name": "Chrome Texter",
 "version": "1.0",
+"author": "effieguenther",
 
 "action": {
     "default_icon": {
@@ -12,11 +13,16 @@
 
 "description": "Converts text formatting in various ways",
 
+"permissions": [
+    "activeTab"
+],
+
 "content_scripts": [
     {
-        "js": ["script.js"],
+        "js": ["script.js", "background.js"],
         "html": ["popup.html"],
-        "matches": ["<all_urls>"]
+        "matches": ["<all_urls>"],
+        "all_frames": true
     }
 ]
 }

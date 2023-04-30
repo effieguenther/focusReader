@@ -8,21 +8,19 @@
     "default_icon": {
         "30": "images/icons8-font-size-30.png"
     },
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "scripts": ["popup.js"],
+    "default_title": "Chrome Texter"
 },
 
 "description": "Converts text formatting in various ways",
 
 "permissions": [
-    "activeTab"
+    "activeTab", "scripting"
 ],
 
-"content_scripts": [
-    {
-        "js": ["script.js", "background.js"],
-        "html": ["popup.html"],
-        "matches": ["<all_urls>"],
-        "all_frames": true
-    }
-]
+"background": {
+    "service_worker": "background.js"
+}
+
 }

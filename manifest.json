@@ -16,11 +16,7 @@
 "description": "Converts text formatting in various ways",
 
 "permissions": [
-    "activeTab", "scripting"
-],
-
-"background": {
-    "service_worker": "background.js"
-}
+    "activeTab", "storage", "scripting"
+]
 
 }

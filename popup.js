@@ -43,17 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
      function halfBoldFunction() {
         console.log("halfBoldFunction called");
-        const PARAGRAPHS = document.querySelectorAll("p");
+        const PARAGRAPHS = document.querySelectorAll("p, h1, h2, h3, h4, h5, h6, a");
         
         for (let i = 0; i < PARAGRAPHS.length; i++) {
             const WORDS = PARAGRAPHS[i].textContent.split(" ");
 
-            for (let i = 0; i < WORDS.length; i++) {
-                const word = WORDS[i];
+            for (let j = 0; j < WORDS.length; j++) {
+                const word = WORDS[j];
                 const halfLength = Math.ceil(word.length / 2);
                 const firstHalf = word.slice(0, halfLength);
                 const secondHalf = word.slice(halfLength);
-                WORDS[i] = `<b>${firstHalf}</b>${secondHalf}`;
+                WORDS[j] = `<b>${firstHalf}</b>${secondHalf}`;
             }
             PARAGRAPHS[i].innerHTML = WORDS.join(" ");
         }  
@@ -61,6 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
      function returnToDefault() {
         console.log("returnToDefault called");
-        document.querySelector("body").style.color = "";
+        
      }
 });

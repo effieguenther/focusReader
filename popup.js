@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 //requrires scripting permission in manifest.json
                 chrome.scripting.executeScript(
                     {
-                        target:{tabId: tab.id, allFrames: true},
+                        target:{tabId: tab.id, allFrames: false},
                         func: halfBoldFunction
                     },
                     
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     chrome.scripting.executeScript(
                         {
-                            target:{tabId: tab.id, allFrames: true},
+                            target:{tabId: tab.id, allFrames: false},
                             func: returnToDefault
                         },
                         
@@ -43,9 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
      function halfBoldFunction() {
         console.log("halfBoldFunction called");
-        const PARAGRAPHS = document.querySelectorAll("p, h1, h2, h3, h4, h5, h6, a");
+        const PARAGRAPHS = document.querySelectorAll("p, h1, h2, h3, h4, h5, h6");
+        const originalContent = [];
         
         for (let i = 0; i < PARAGRAPHS.length; i++) {
+            originalContent.push(PARAGRAPHS[i].textContent);
             const WORDS = PARAGRAPHS[i].textContent.split(" ");
 
             for (let j = 0; j < WORDS.length; j++) {
@@ -57,10 +59,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             PARAGRAPHS[i].innerHTML = WORDS.join(" ");
         }  
+        chrome.storage.local.set({originalContent: originalContent}, function(){
+            console.log(originalContent);
+        });
      }
 
      function returnToDefault() {
         console.log("returnToDefault called");
-        
-     }
+        chrome.storage.local.get(['originalContent'], function(result) {
+            const PARAGRAPHS = document.querySelectorAll("p, h1, h2, h3, h4, h5, h6");
+            for (let i = 0; i < PARAGRAPHS.length; i++) {
+                PARAGRAPHS[i].innerHTML = result.originalContent[i];
+            }
+         }) 
+    };
 });

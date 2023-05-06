@@ -1,10 +1,16 @@
 h1 {
-    font-size: medium;
+    font-size: small;
+    text-align: center;
 }
 
 body {
     width: 130px;
     text-align: right;
+    background-color: rgb(240, 246, 253);
+}
+
+hr {
+  border: 1px solid rgb(35, 76, 122);
 }
 
 /* switch box styling */
@@ -29,7 +35,8 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    border-radius: 10px;
+    background-color: rgb(160, 184, 211);
     -webkit-transition: .4s;
     transition: .4s;
   }
@@ -44,14 +51,15 @@ body {
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
+    border-radius: 10px;
   }
 
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: rgb(35, 76, 122);
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px rgb(35, 76, 122);
   }
   
   input:checked + .slider:before {

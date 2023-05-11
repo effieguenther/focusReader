@@ -160,7 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("increase spacing function called");
         const elements = document.querySelectorAll("*");
         for (let i=0; i < elements.length; i++) {
-            elements[i].style.letterSpacing = "3px"; 
+            elements[i].style.letterSpacing = "0.1em"; 
+            elements[i].style.lineHeight = "2em";
         }
     }
 
@@ -178,6 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const elements = document.querySelectorAll("*");
         for (let i = 0; i < elements.length; i++) {
             elements[i].style.letterSpacing = "normal";
+            elements[i].style.lineHeight = "normal";
         };
     }
 

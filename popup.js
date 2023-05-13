@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chrome.storage.local.set({originalFont: document.body.style.fontFamily});
     };
 
-//this code runs when the half bold switch is clicked
+    //this code runs when the half bold switch is clicked
     HALF_BOLD_SWITCH.addEventListener("change", () => {
         //save the state of the checkbox
         chrome.storage.local.set({halfBoldEnabled: HALF_BOLD_SWITCH.checked});
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })         
      });
 
-//this code runs when a new option is selected in the font drop down menu
+    //this code runs when a new option is selected in the font drop down menu
      FONT_SELECT.addEventListener("change", function() {
         //store the option which is selected
 
@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });         
      });
 
+     //this code runs when the letter spacing '-' button is clicked
      LETTER_SMALLER_BUTTON.addEventListener("click", () => {
         chrome.tabs.query({active: true}, (tabs) => {
             const tab = tabs[0];
@@ -100,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })         
      });
 
+     //this code runs when the letter spacing '+' button is clicked
      LETTER_BIGGER_BUTTON.addEventListener("click", () => {
         chrome.tabs.query({active: true}, (tabs) => {
             const tab = tabs[0];
@@ -116,6 +118,39 @@ document.addEventListener("DOMContentLoaded", () => {
         })         
      });
 
+     //this code runs when the line spacing '-' button is clicked
+     LINE_SMALLER_BUTTON.addEventListener("click", () => {
+        chrome.tabs.query({active: true}, (tabs) => {
+            const tab = tabs[0];
+            if (tab) {
+                chrome.scripting.executeScript(
+                    {
+                        target:{tabId: tab.id, allFrames: false},
+                        func: lineSmallerFunction
+                    } 
+                )
+            } else {
+                alert("there are no active tabs");
+            }
+        })         
+     });
+
+     //this code runs when the line spacing '+' button is clicked
+     LINE_BIGGER_BUTTON.addEventListener("click", () => {
+        chrome.tabs.query({active: true}, (tabs) => {
+            const tab = tabs[0];
+            if (tab) {
+                chrome.scripting.executeScript(
+                    {
+                        target:{tabId: tab.id, allFrames: false},
+                        func: lineBiggerFunction
+                    } 
+                )
+            } else {
+                alert("there are no active tabs");
+            }
+        })         
+     });
 
 
      function halfBoldFunction() {
@@ -221,22 +256,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function returnFontToDefault() {
-        chrome.storage.local.get("originalFont", (data) => {
-            let originalFont = data.originalFont;
-            const elements = document.querySelectorAll("*");
-            for (let i = 0; i < elements.length; i++) {
-                elements[i].style.fontFamily = originalFont;
-            };
-        });
-    };
-
-    function returnSpacingToDefault() {
+    function lineSmallerFunction() {
         const elements = document.querySelectorAll("*");
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].style.letterSpacing = "normal";
-            elements[i].style.lineHeight = "normal";
-        };
+        const bodyStyles = window.getComputedStyle(document.body);
+        let currentLineHeight = bodyStyles.getPropertyValue('line-height');
+        
+        if (currentLineHeight <= '20px') {
+            console.log("Line height minimum hit")
+            return;
+        }
+
+        const newLineHeight = parseFloat(currentLineHeight) - 1;
+        
+        for (let i=0; i < elements.length; i++) {
+            elements[i].style.lineHeight = `${newLineHeight}px`; 
+        }
+    }
+
+    function lineBiggerFunction() {
+        const elements = document.querySelectorAll("*");
+        const bodyStyles = window.getComputedStyle(document.body);
+        let currentLineHeight = bodyStyles.getPropertyValue('line-height');
+        console.log("Current line height: " + currentLineHeight);
+        
+        if (currentLineHeight === 'normal') {
+            currentLineHeight === '0px';
+        }
+
+        const newLineHeight = parseFloat(currentLineHeight) + 1;
+        
+        for (let i=0; i < elements.length; i++) {
+            elements[i].style.lineHeight = `${newLineHeight}px`; 
+        }
     }
 
 });

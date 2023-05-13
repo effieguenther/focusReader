@@ -2,7 +2,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     const HALF_BOLD_SWITCH = document.querySelector('#halfBold'); 
     const FONT_SELECT = document.querySelector('#fonts');
-    const INCREASE_SPACING_SWITCH = document.querySelector('#increaseSpacing');
+    const LETTER_SMALLER_BUTTON = document.querySelector('#letterSmaller');
+    const LETTER_BIGGER_BUTTON = document.querySelector('#letterBigger');
+    const LINE_SMALLER_BUTTON = document.querySelector('#lineSmaller');
+    const LINE_BIGGER_BUTTON = document.querySelector('#lineBigger');
     
     //load the saved state of the checkboxes with an async function
     //requires storage permission in manifest.json
@@ -13,9 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
             const data2 = await chrome.storage.local.get("fontSelected");
             FONT_SELECT.value = data2.fontSelected;
-        
-            const data3 = await chrome.storage.local.get("increaseSpacingEnabled");
-            INCREASE_SPACING_SWITCH.checked = data3.increaseSpacingEnabled;
         } catch (error) {
             console.error(error);
         };
@@ -84,29 +84,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });         
      });
 
-     INCREASE_SPACING_SWITCH.addEventListener("change", () => {
-        chrome.storage.local.set({increaseSpacingEnabled: INCREASE_SPACING_SWITCH.checked})
-
+     LETTER_SMALLER_BUTTON.addEventListener("click", () => {
         chrome.tabs.query({active: true}, (tabs) => {
             const tab = tabs[0];
             if (tab) {
-                if (INCREASE_SPACING_SWITCH.checked) {
                 chrome.scripting.executeScript(
                     {
                         target:{tabId: tab.id, allFrames: false},
-                        func: increaseSpacingFunction
-                    },
-                    
+                        func: letterSmallerFunction
+                    } 
                 )
-                } else {
-                    chrome.scripting.executeScript(
-                        {
-                            target:{tabId: tab.id, allFrames: false},
-                            func: returnSpacingToDefault
-                        },
-                        
-                    ) 
-                }
+            } else {
+                alert("there are no active tabs");
+            }
+        })         
+     });
+
+     LETTER_BIGGER_BUTTON.addEventListener("click", () => {
+        chrome.tabs.query({active: true}, (tabs) => {
+            const tab = tabs[0];
+            if (tab) {
+                chrome.scripting.executeScript(
+                    {
+                        target:{tabId: tab.id, allFrames: false},
+                        func: letterBiggerFunction
+                    } 
+                )
             } else {
                 alert("there are no active tabs");
             }
@@ -184,12 +187,37 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     };
 
-    function increaseSpacingFunction() {
-        console.log("increase spacing function called");
+    function letterSmallerFunction() {
         const elements = document.querySelectorAll("*");
+        const bodyStyles = window.getComputedStyle(document.body);
+        let currentLetterSpacing = bodyStyles.getPropertyValue('letter-spacing');
+        
+        if (currentLetterSpacing === 'normal' || currentLetterSpacing === 
+        '0px') {
+            console.log("Letter spacing minimum hit")
+            return;
+        }
+
+        const newLetterSpacing = parseFloat(currentLetterSpacing) - 0.1;
+        
         for (let i=0; i < elements.length; i++) {
-            elements[i].style.letterSpacing = "0.1em"; 
-            elements[i].style.lineHeight = "2em";
+            elements[i].style.letterSpacing = `${newLetterSpacing}px`; 
+        }
+    }
+
+    function letterBiggerFunction() {
+        const elements = document.querySelectorAll("*");
+        const bodyStyles = window.getComputedStyle(document.body);
+        let currentLetterSpacing = bodyStyles.getPropertyValue('letter-spacing');
+        
+        if (currentLetterSpacing === 'normal') {
+            currentLetterSpacing = '0px';
+        }
+
+        const newLetterSpacing = parseFloat(currentLetterSpacing) + 0.1;
+
+        for (let i=0; i < elements.length; i++) {
+            elements[i].style.letterSpacing = `${newLetterSpacing}px`; 
         }
     }
 

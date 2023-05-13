@@ -9,12 +9,29 @@ h2 {
 
 body {
     width: 150px;
-    text-align: right;
+    text-align: left;
     background-color: rgb(240, 246, 253);
 }
 
 hr {
   border: 1px solid rgb(35, 76, 122);
+}
+
+button {
+  border: 1px solid rgb(35, 76, 122);
+  border-radius: 5px;
+  color: rgb(35, 76, 122);
+  width: 22px;
+  height: 22px;
+  text-align: center;
+}
+
+button:hover {
+  background-color: white;
+}
+
+button:active {
+  border: 1.5px solid rgb(35, 76, 122);
 }
 
 /* switch box styling */

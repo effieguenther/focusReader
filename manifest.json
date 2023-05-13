@@ -16,7 +16,8 @@
 "description": "Converts text formatting in various ways",
 
 "permissions": [
-    "activeTab", "storage", "scripting"
+    "activeTab", "storage", "scripting", "chrome://*/*",
+    "chrome-extension://*/*"
 ]
 
 }

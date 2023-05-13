@@ -10,18 +10,21 @@
 <body>
     <h1>CHROME READER</h1>
     <hr>
-    <p>Half Bold</p>
+    <h2>Half Bold</h2>
     <label class="switch">
         <input type="checkbox" id="halfBold">
         <span class="slider"></span>
     </label>
-    <p>Comic Sans</p>
-    <label class="switch">
-        <input type="checkbox" id="comicSans">
-        <span class="slider"></span>
-    </label>
 
-    <p>Increase Spacing</p>
+    <h2>Change Font</h2>
+    <select name="fonts" id="fonts">
+        <option value="">Default</option>
+        <option value="arial">Arial</option>
+        <option value="helvetica">Helvetica</option>
+        <option value="Comic Sans MS">Comic Sans MS</option>
+    </select>
+
+    <h2>Increase Spacing</h2>
     <label class="switch">
         <input type="checkbox" id="increaseSpacing">
         <span class="slider"></span>
@@ -30,3 +33,5 @@
     <script src="popup.js"></script>
 </body>
 </html>
+
+       

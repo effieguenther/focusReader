@@ -1,22 +1,33 @@
 //run this file only when the popup is opened
 document.addEventListener("DOMContentLoaded", () => {
     const HALF_BOLD_SWITCH = document.querySelector('#halfBold'); 
-    const COMIC_SANS_SWITCH = document.querySelector('#comicSans');
+    const FONT_SELECT = document.querySelector('#fonts');
     const INCREASE_SPACING_SWITCH = document.querySelector('#increaseSpacing');
     
-    //load the saved state of the checkboxes
+    //load the saved state of the checkboxes with an async function
     //requires storage permission in manifest.json
-    chrome.storage.local.get("halfBoldEnabled", (data) => {
-        HALF_BOLD_SWITCH.checked = data.halfBoldEnabled;
-    });
-    chrome.storage.local.get("comicSansEnabled", (data) => {
-        COMIC_SANS_SWITCH.checked = data.comicSansEnabled;
-    });
-    chrome.storage.local.get("increaseSpacingEnabled", (data) => {
-        INCREASE_SPACING_SWITCH.checked = data.increaseSpacingEnabled;
-    })
+    async function getData() {
+        try {
+            const data1 = await chrome.storage.local.get("halfBoldEnabled");
+            HALF_BOLD_SWITCH.checked = data1.halfBoldEnabled;
+        
+            const data2 = await chrome.storage.local.get("fontSelected");
+            FONT_SELECT.value = data2.fontSelected;
+        
+            const data3 = await chrome.storage.local.get("increaseSpacingEnabled");
+            INCREASE_SPACING_SWITCH.checked = data3.increaseSpacingEnabled;
+        } catch (error) {
+            console.error(error);
+        };
+    };
+    getData();
 
+    //store the original font of the page
+    if (FONT_SELECT.value === "") {
+        chrome.storage.local.set({originalFont: document.body.style.fontFamily});
+    };
 
+//this code runs when the half bold switch is clicked
     HALF_BOLD_SWITCH.addEventListener("change", () => {
         //save the state of the checkbox
         chrome.storage.local.set({halfBoldEnabled: HALF_BOLD_SWITCH.checked});
@@ -50,34 +61,28 @@ document.addEventListener("DOMContentLoaded", () => {
         })         
      });
 
-     COMIC_SANS_SWITCH.addEventListener("change", () => {
-        chrome.storage.local.set({comicSansEnabled: COMIC_SANS_SWITCH.checked})
+//this code runs when a new option is selected in the font drop down menu
+     FONT_SELECT.addEventListener("change", function() {
+        //store the option which is selected
+
+        chrome.storage.local.set({fontSelected: this.value });
+        console.log(this.value);
 
         chrome.tabs.query({active: true}, (tabs) => {
             const tab = tabs[0];
             if (tab) {
-                if (COMIC_SANS_SWITCH.checked) {
                 chrome.scripting.executeScript(
                     {
                         target:{tabId: tab.id, allFrames: false},
-                        func: comicSansFunction
+                        func: fontFunction
                     },
                     
-                )
-                } else {
-                    chrome.scripting.executeScript(
-                        {
-                            target:{tabId: tab.id, allFrames: false},
-                            func: returnFontToDefault
-                        },
-                        
-                    ) 
-                }
+                );
             } else {
                 alert("there are no active tabs");
-            }
-        })         
-     })
+            };
+        });         
+     });
 
      INCREASE_SPACING_SWITCH.addEventListener("change", () => {
         chrome.storage.local.set({increaseSpacingEnabled: INCREASE_SPACING_SWITCH.checked})
@@ -147,12 +152,35 @@ document.addEventListener("DOMContentLoaded", () => {
          })
     };
 
-    function comicSansFunction() {
-        console.log("comic sans function called");
-        chrome.storage.local.set({originalFont: document.body.style.fontFamily});
+    async function fontFunction() {
+        console.log("font function called");
+        let currentFont = "";
+        let originalFont = "";
         const elements = document.querySelectorAll("*");
+
+
+        //retrieve the font which is currently selected and the original font of the page
+        async function getFontData() {
+            try {
+                const data1 = await chrome.storage.local.get("fontSelected");
+                currentFont = data1.fontSelected;
+
+                const data2 = await chrome.storage.local.get("originalFont");
+                originalFont = data2.originalFont;
+            } catch (error) {
+                console.error(error);
+            };
+        };
+        await getFontData();
+        console.log(currentFont);
+
+        //if the font selected is "" (default option) then the current font should be the original font of the page
+        if (currentFont === "") {
+            currentFont = originalFont;
+        };
+
         for (let i = 0; i < elements.length; i++) {
-            elements[i].style.fontFamily = "Comic Sans MS, sans-serif";
+            elements[i].style.fontFamily = currentFont;
         };
     };
 

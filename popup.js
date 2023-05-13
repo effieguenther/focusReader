@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const LINE_SMALLER_BUTTON = document.querySelector('#lineSmaller');
     const LINE_BIGGER_BUTTON = document.querySelector('#lineBigger');
     
-    //load the saved state of the checkboxes with an async function
+    //load the saved state of the checkboxes and select menus with an async function
     //requires storage permission in manifest.json
     async function getData() {
         try {
@@ -31,14 +31,14 @@ document.addEventListener("DOMContentLoaded", () => {
     HALF_BOLD_SWITCH.addEventListener("change", () => {
         //save the state of the checkbox
         chrome.storage.local.set({halfBoldEnabled: HALF_BOLD_SWITCH.checked});
-        console.log(HALF_BOLD_SWITCH.halfBoldEnabled);
         
-        //locate the current tab and use programmatic injection to call a function which executes within the tab, and not within the isolated popup window
-        //requrires scripting permission in manifest.json
+        //locate the current tab - requires "activeTab" permission in manifest.json
         chrome.tabs.query({active: true}, (tabs) => {
             const tab = tabs[0];
             if (tab) {
                 if (HALF_BOLD_SWITCH.checked) {
+
+                //programmatic injection - this calls a function which executes within the tab, and not within the isolated popup window. Otherwise the function would alter the popup window and not the browser window
                 chrome.scripting.executeScript(
                     {
                         target:{tabId: tab.id, allFrames: false},
@@ -63,8 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //this code runs when a new option is selected in the font drop down menu
      FONT_SELECT.addEventListener("change", function() {
+        
         //store the option which is selected
-
         chrome.storage.local.set({fontSelected: this.value });
         console.log(this.value);
 
@@ -152,6 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
         })         
      });
 
+
+     
+     //functions which are only called using programmatic injection to run on the active tab
 
      function halfBoldFunction() {
         console.log("halfBoldFunction called");
@@ -266,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const newLineHeight = parseFloat(currentLineHeight) - 1;
+        const newLineHeight = parseFloat(currentLineHeight) - 2;
         
         for (let i=0; i < elements.length; i++) {
             elements[i].style.lineHeight = `${newLineHeight}px`; 
@@ -277,13 +280,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const elements = document.querySelectorAll("*");
         const bodyStyles = window.getComputedStyle(document.body);
         let currentLineHeight = bodyStyles.getPropertyValue('line-height');
-        console.log("Current line height: " + currentLineHeight);
         
         if (currentLineHeight === 'normal') {
             currentLineHeight === '0px';
         }
 
-        const newLineHeight = parseFloat(currentLineHeight) + 1;
+        const newLineHeight = parseFloat(currentLineHeight) + 2;
         
         for (let i=0; i < elements.length; i++) {
             elements[i].style.lineHeight = `${newLineHeight}px`; 

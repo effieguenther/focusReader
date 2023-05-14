@@ -1,6 +1,6 @@
 //run this file only when the popup is opened
 document.addEventListener("DOMContentLoaded", () => {
-    const HALF_BOLD_SWITCH = document.querySelector('#halfBold'); 
+    const BIONIC_SWITCH = document.querySelector('#bionic'); 
     const FONT_SELECT = document.querySelector('#fonts');
     const LETTER_SMALLER_BUTTON = document.querySelector('#letterSmaller');
     const LETTER_BIGGER_BUTTON = document.querySelector('#letterBigger');
@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //requires storage permission in manifest.json
     async function getData() {
         try {
-            const data1 = await chrome.storage.local.get("halfBoldEnabled");
-            HALF_BOLD_SWITCH.checked = data1.halfBoldEnabled;
+            const data1 = await chrome.storage.local.get("bionicEnabled");
+            BIONIC_SWITCH.checked = data1.bionicEnabled;
         
             const data2 = await chrome.storage.local.get("fontSelected");
             FONT_SELECT.value = data2.fontSelected;
@@ -27,22 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
         chrome.storage.local.set({originalFont: document.body.style.fontFamily});
     };
 
-    //this code runs when the half bold switch is clicked
-    HALF_BOLD_SWITCH.addEventListener("change", () => {
+    //this code runs when the bionic switch is clicked
+    BIONIC_SWITCH.addEventListener("change", () => {
         //save the state of the checkbox
-        chrome.storage.local.set({halfBoldEnabled: HALF_BOLD_SWITCH.checked});
+        chrome.storage.local.set({bionicEnabled: BIONIC_SWITCH.checked});
         
         //locate the current tab - requires "activeTab" permission in manifest.json
         chrome.tabs.query({active: true}, (tabs) => {
             const tab = tabs[0];
             if (tab) {
-                if (HALF_BOLD_SWITCH.checked) {
+                if (BIONIC_SWITCH.checked) {
 
                 //programmatic injection - this calls a function which executes within the tab, and not within the isolated popup window. Otherwise the function would alter the popup window and not the browser window
                 chrome.scripting.executeScript(
                     {
                         target:{tabId: tab.id, allFrames: false},
-                        func: halfBoldFunction
+                        func: bionicFunction
                     },
                     
                 )
@@ -153,11 +153,11 @@ document.addEventListener("DOMContentLoaded", () => {
      });
 
 
-     
+
      //functions which are only called using programmatic injection to run on the active tab
 
-     function halfBoldFunction() {
-        console.log("halfBoldFunction called");
+     function bionicFunction() {
+        console.log("bionicFunction called");
         const PARAGRAPHS = document.querySelectorAll("p, h1, h2, h3, h4, h5, h6");
         const originalContent = [];
         
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const newLetterSpacing = parseFloat(currentLetterSpacing) - 0.1;
+        const newLetterSpacing = parseFloat(currentLetterSpacing) - 0.4;
         
         for (let i=0; i < elements.length; i++) {
             elements[i].style.letterSpacing = `${newLetterSpacing}px`; 
@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentLetterSpacing = '0px';
         }
 
-        const newLetterSpacing = parseFloat(currentLetterSpacing) + 0.1;
+        const newLetterSpacing = parseFloat(currentLetterSpacing) + 0.4;
 
         for (let i=0; i < elements.length; i++) {
             elements[i].style.letterSpacing = `${newLetterSpacing}px`; 
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const newLineHeight = parseFloat(currentLineHeight) - 2;
+        const newLineHeight = parseFloat(currentLineHeight) - 10;
         
         for (let i=0; i < elements.length; i++) {
             elements[i].style.lineHeight = `${newLineHeight}px`; 
@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentLineHeight === '0px';
         }
 
-        const newLineHeight = parseFloat(currentLineHeight) + 2;
+        const newLineHeight = parseFloat(currentLineHeight) + 10;
         
         for (let i=0; i < elements.length; i++) {
             elements[i].style.lineHeight = `${newLineHeight}px`; 

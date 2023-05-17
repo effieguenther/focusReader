@@ -1,6 +1,6 @@
 {
 "manifest_version": 3,
-"name": "Chrome Texter",
+"name": "Focus Reader",
 "version": "1.0",
 "author": "effieguenther",
 
@@ -10,10 +10,10 @@
     },
     "default_popup": "popup.html",
     "scripts": ["popup.js"],
-    "default_title": "Chrome Texter"
+    "default_title": "Focus Reader"
 },
 
-"description": "Converts text formatting in various ways",
+"description": "A variety of tools to improve text readability and comprehension.",
 
 "permissions": [
     "activeTab", "storage", "scripting", "chrome://*/*",

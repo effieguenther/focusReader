@@ -15,4 +15,4 @@ Tool #3/4: Adjust letter and line spacing
 
 These + and - buttons allow the user to adjust the spacing between letters and lines on the webpage. There is no maximum, but there is a minimum for each which prevents the user from making the text completely unreadable.
 
-
+<img src='./images/screenshot.png' alt='screenshot'/>
